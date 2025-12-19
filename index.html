@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猫猫的快乐学习</title>
+    <style>
+        /* --- 全局设置 --- */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text-color: #555;
+            --primary-color: #ff9a9e;
+            --hover-shadow: 0 10px 25px rgba(255, 154, 158, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', 'Rounded Mplus 1c', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            /* 淡彩流光渐变背景 */
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            padding: 20px; /* 防止手机端贴边 */
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 容器 --- */
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
+            border-radius: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            text-align: center;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        /* --- 标题区域 --- */
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* --- 网格布局 --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            padding-bottom: 20px;
+        }
+
+        /* --- 卡片样式 --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--hover-shadow);
+            border-color: #fff;
+            background: white;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* --- 特殊颜色微调 (鼠标悬停时的品牌色) --- */
+        .card[data-type="deepseek"]:hover { color: #4075ff; }
+        .card[data-type="gemini"]:hover { color: #8e44ad; }
+        .card[data-type="notebook"]:hover { color: #f39c12; }
+        .card[data-type="baidu"]:hover { color: #2980b9; }
+        .card[data-type="google"]:hover { color: #e74c3c; }
+        .card[data-type="github"]:hover { color: #333; }
+        .card[data-type="kimi"]:hover { color: #2ecc71; }
+        /* 新增接口颜色 */
+        .card[data-type="bilibili"]:hover { color: #fb7299; } /* B站粉 */
+        .card[data-type="zhihu"]:hover { color: #0084ff; }   /* 知乎蓝 */
+        .card[data-type="csdn"]:hover { color: #fc5531; }    /* CSDN红 */
+
+        /* --- 装饰性猫耳朵 --- */
+        .cat-ears {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 40px;
+            z-index: -1;
+        }
+        .ear {
+            width: 30px;
+            height: 30px;
+            background: rgba(255,255,255,0.6);
+            position: absolute;
+            top: 10px;
+            border-radius: 5px 20px 0 0;
+        }
+        .ear.left { left: 0; transform: rotate(-15deg); }
+        .ear.right { right: 0; transform: rotate(15deg); }
+
+        /* --- 页脚 --- */
+        footer {
+            margin-top: 20px;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* --- 简单的加载动画 --- */
+        .loading {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .paw-print {
+            font-size: 4rem;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="loading" id="loader">
+        <div class="paw-print">🐾</div>
+    </div>
+
+    <div class="container">
+        <div class="cat-ears">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+        </div>
+
+        <header>
+            <h1>猫猫的快乐学习</h1>
+            <p>Study hard, play hard, meow~ 🐾</p>
+        </header>
+
+        <div class="grid">
+            <a href="https://chat.deepseek.com/" target="_blank" class="card" data-type="deepseek">
+                <div class="card-icon">🐳</div>
+                <div class="card-title">DeepSeek</div>
+            </a>
+
+            <a href="https://gemini.google.com/" target="_blank" class="card" data-type="gemini">
+                <div class="card-icon">✨</div>
+                <div class="card-title">Gemini</div>
+            </a>
+
+            <a href="https://notebooklm.google.com/" target="_blank" class="card" data-type="notebook">
+                <div class="card-icon">📓</div>
+                <div class="card-title">NotebookLM</div>
+            </a>
+
+            <a href="https://kimi.moonshot.cn/" target="_blank" class="card" data-type="kimi">
+                <div class="card-icon">🌙</div>
+                <div class="card-title">Kimi</div>
+            </a>
+
+            <a href="https://www.google.com/" target="_blank" class="card" data-type="google">
+                <div class="card-icon">🔍</div>
+                <div class="card-title">Google</div>
+            </a>
+
+            <a href="https://www.baidu.com/" target="_blank" class="card" data-type="baidu">
+                <div class="card-icon">🐼</div>
+                <div class="card-title">百度</div>
+            </a>
+            
+            <a href="https://github.com/" target="_blank" class="card" data-type="github">
+                <div class="card-icon">🐱</div>
+                <div class="card-title">GitHub</div>
+            </a>
+
+            <a href="https://www.bilibili.com/" target="_blank" class="card" data-type="bilibili">
+                <div class="card-icon">📺</div>
+                <div class="card-title">哔哩哔哩</div>
+            </a>
+
+            <a href="https://www.zhihu.com/" target="_blank" class="card" data-type="zhihu">
+                <div class="card-icon">🧠</div>
+                <div class="card-title">知乎</div>
+            </a>
+
+            <a href="https://www.csdn.net/" target="_blank" class="card" data-type="csdn">
+                <div class="card-icon">💻</div>
+                <div class="card-title">CSDN</div>
+            </a>
+        </div>
+
+        <footer>
+            Have a nice day! 🌈
+        </footer>
+    </div>
+
+    <script>
+        // 页面加载完成后隐藏加载层
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 800);
+        });
+
+        // 鼠标点击特效
+        document.addEventListener('click', (e) => {
+            createPaw(e.clientX, e.clientY);
+        });
+
+        function createPaw(x, y) {
+            const paw = document.createElement('div');
+            paw.innerText = '🐾';
+            paw.style.position = 'fixed';
+            paw.style.left = x + 'px';
+            paw.style.top = y + 'px';
+            paw.style.fontSize = '20px';
+            paw.style.pointerEvents = 'none';
+            paw.style.animation = 'floatUp 1s ease-out forwards';
+            paw.style.zIndex = '1000';
+            document.body.appendChild(paw);
+
+            setTimeout(() => {
+                paw.remove();
+            }, 1000);
+        }
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes floatUp {
+                0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+                100% { opacity: 0; transform: translate(-50%, -150%) scale(1.5); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
